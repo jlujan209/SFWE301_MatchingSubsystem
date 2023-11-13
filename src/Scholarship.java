@@ -1,22 +1,26 @@
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Scholarship {
+    private String name;
     private float minGPA;
     private String department;
     private String[] acceptedMajors;
     private LocalDate selectionDate;
     private double awardAmount;
-    private LinkedList<Integer> applicationIDs;
+    private List<String> applicationIDs;
+    private String ID;
 
-    public Scholarship(float minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount, LinkedList<Integer> applicationIDs) {
+    public Scholarship(String name, String ID, float minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount) {
+        this.name = name;
+        this.ID = ID;
         this.minGPA = minGPA;
         this.department = department;
         this.acceptedMajors = new String[acceptedMajors.length];
         selectionDate = LocalDate.of(selectionYear, selectionMonth, selectionDay);;
         this.awardAmount = awardAmount;
-        this.applicationIDs = new LinkedList<Integer>();
-        applicationIDs = (LinkedList<Integer>) applicationIDs.clone();
+        this.applicationIDs = new ArrayList<String>();
 
         try {
             for (int i = 0; i < acceptedMajors.length; ++i) {
@@ -33,6 +37,10 @@ public class Scholarship {
             System.out.println(e.getMessage());
             System.exit(1);
         }
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public String[] getAcceptedMajors() {
@@ -75,7 +83,15 @@ public class Scholarship {
         this.selectionDate = selectionDate;
     }
 
-    public LinkedList<Integer> getApplicationIDs() {
+    public List<String> getApplicationIDs() {
         return applicationIDs;
+    }
+
+    public void addApplication(String applicationID) {
+        applicationIDs.add(applicationID);
+    }
+
+    public String getID() {
+        return ID;
     }
 }

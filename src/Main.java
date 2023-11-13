@@ -1,16 +1,18 @@
-import java.util.Random;
-
 public class Main {
-    public static final int MAX_6_BIT_HEX_NUM = 16777216 - 1;
     public static void main(String[] args) throws Exception {
-        System.out.println(generateID());
-    }
-
-    public static String generateID() {
-        Random rand = new Random();
-        int n = rand.nextInt(MAX_6_BIT_HEX_NUM);
-        String ID = String.format("%06x", n);
+        ScholarshipApplicationManager test = new ScholarshipApplicationManager();
         
-        return ID;
+        test.initialize();
+
+        String scholarshipName;
+        Scholarship scholarshipInfo;
+
+        scholarshipName = test.getScholarshipID("NoName4");
+        if (scholarshipName != null) {
+            scholarshipInfo = test.getScholarshipInfo(scholarshipName);
+            if (scholarshipInfo != null) {
+                System.out.println((scholarshipInfo.getApplicationIDs()).toString());
+            }
+        }
     }
 }

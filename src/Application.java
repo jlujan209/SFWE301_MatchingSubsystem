@@ -9,13 +9,27 @@ enum ApplicationStatus {
 public class Application {
     private String letter;
     private ApplicationStatus status;
-    private String applicationID;
+    private String ID;
     private String applicantID;
+    private String scholarshipID;
     
-    public Application(String applicantID, String applicationID, String letter) {
+    public Application(String applicantID, String ID, String scholarshipID, String letter) {
         this.applicantID = applicantID;
-        this.applicationID = applicationID;
+        this.ID = ID;
         this.letter = letter;
+        this.scholarshipID = scholarshipID;
         this.status = ApplicationStatus.APPLIED;
+    }
+
+    public String getID() {
+      return ID;
+    }
+
+    public String getScholarshipID() {
+      return scholarshipID;
+    }
+
+        public String getApplicantID() {
+      return applicantID;
     }
 }
