@@ -38,4 +38,8 @@ public class Applicant {
     public String getMajor() {
         return major;
     }
+
+    public List<Integer> getApplicationIDs() {
+        return applicationIDs;
+    }
 }

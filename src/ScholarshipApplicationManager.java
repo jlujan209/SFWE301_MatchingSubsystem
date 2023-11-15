@@ -10,7 +10,6 @@ public class ScholarshipApplicationManager {
     private Hashtable<Integer, Application> Applications;
     private Hashtable<Integer, Applicant> Applicants;
     private Hashtable<String, Integer> ScholarshipSearchInfo;
-    private List<Integer> ApplicationSearchInfo;
     private Hashtable<String, Integer> ApplicantSearchInfo;
 
     public ScholarshipApplicationManager() {
@@ -18,7 +17,6 @@ public class ScholarshipApplicationManager {
         Applications = new Hashtable<Integer, Application>();
         Applicants = new Hashtable<Integer, Applicant>();
         ScholarshipSearchInfo = new Hashtable<String, Integer>();
-        ApplicationSearchInfo = new ArrayList<Integer>();
         ApplicantSearchInfo = new Hashtable<String, Integer>();
     }
     
@@ -30,26 +28,28 @@ public class ScholarshipApplicationManager {
     }
 
     public void initialize() {
-        String[] majors = {"NA"};
+        String[] majors = {"NA", "NA2", "NA3"};
 
-        addScholarship(new Scholarship("NoName1", generateID(), 3.3, "NA1", majors, 1, 1, 2001, -1));
+        addScholarship(new Scholarship("NoName1", generateID(), 3.4, "NA1", majors, 1, 1, 2001, -1));
         addScholarship(new Scholarship("NoName2", generateID(), 4.0, "NA2", majors, 2, 2, 2002, -2));
         addScholarship(new Scholarship("NoName3", generateID(), 4.0, "NA3", majors, 3, 3, 2003, -3));
 
-        addApplicant(new Applicant("John DoeF", generateID(), 3.3, "NA", 3));
-        addApplicant(new Applicant("John Doe1", generateID(), 3.2, "NA", 3));
-        addApplication(new Application(getApplicantID("John DoeF"), generateID(), getScholarshipID("NoName1"), "String letter1"));
-        addApplication(new Application(getApplicantID("John Doe1"), generateID(), getScholarshipID("NoName1"), "String letter2"));
+        addApplicant(new Applicant("John Doe1", generateID(), 3.3, "NA", 3));
+        addApplicant(new Applicant("John Doe2", generateID(), 4.2, "NA", 3));
+        addApplicant(new Applicant("John Doe3", generateID(), 3.4, "NA", 3));
+        addApplication(new Application(getApplicantID("John Doe1"), generateID(), getScholarshipID("NoName1"), "String letter1"));
+        addApplication(new Application(getApplicantID("John Doe2"), generateID(), getScholarshipID("NoName1"), "String letter2"));
+        addApplication(new Application(getApplicantID("John Doe3"), generateID(), getScholarshipID("NoName1"), "String letter3"));
     }
     
-    public ArrayList<Application> sortApplicants(int ScholarshipID) {
+    private ArrayList<Application> sortApplicants(int ScholarshipID) {
         ArrayList<Application> sortedList = new ArrayList<Application>();
-        Scholarship currScholarship = Scholarships.get(ScholarshipID);
+        Scholarship currScholarship = getScholarshipInfo(ScholarshipID);
         List<Integer> applications = currScholarship.getApplicationIDs();
         int i;
 
         for (int application : applications) {
-            Application currApplication = Applications.get(application);
+            Application currApplication = getApplicationInfo(application);
             if (sortedList.isEmpty()) {
                 sortedList.add(currApplication);
             }
@@ -60,10 +60,10 @@ public class ScholarshipApplicationManager {
                         break;
                     }
                     else if ((currApplication.getScore() == tempApplication.getScore())) {
-                        if (Applicants.get(currApplication.getApplicantID()).getGPA() > Applicants.get(tempApplication.getApplicantID()).getGPA()) {
+                        if (getApplicantInfo(currApplication.getApplicantID()).getGPA() > getApplicantInfo(tempApplication.getApplicantID()).getGPA()) {
                             break;
                         }
-                        else if ((Math.abs(Applicants.get(currApplication.getApplicantID()).getGPA() - Applicants.get(tempApplication.getApplicantID()).getGPA())) <= 0.01) {
+                        else if ((Math.abs(getApplicantInfo(currApplication.getApplicantID()).getGPA() - getApplicantInfo(tempApplication.getApplicantID()).getGPA())) <= 0.01) {
                             if (currApplication.getID() > tempApplication.getID()) {
                                 break;
                             }
@@ -78,42 +78,48 @@ public class ScholarshipApplicationManager {
     }
 
     public Integer getScholarshipID(String ScholarshipName) {
+        if (ScholarshipSearchInfo.get(ScholarshipName) == null) {
+            throw new NullPointerException("Scholarship " + ScholarshipName + " does not exist.\n");
+        }
         return ScholarshipSearchInfo.get(ScholarshipName);
     }
 
     public Integer getApplicantID(String ApplicantName) {
+        if (ApplicantSearchInfo.get(ApplicantName) == null) {
+            throw new NullPointerException("Applicant " + ApplicantName + " does not exist.\n");
+        }
         return ApplicantSearchInfo.get(ApplicantName);
     }
 
-    public Scholarship getScholarshipInfo(int ScholarshipID) {
+    private Scholarship getScholarshipInfo(int ScholarshipID) {
+        if (Scholarships.get(ScholarshipID) == null) {
+            throw new NullPointerException("Scholarship ID " + String.format("%06x", ScholarshipID) + " does not exist.\n");
+        }
         return Scholarships.get(ScholarshipID);
     }
 
-    public Applicant getApplicantInfo(int ApplicantID) {
+    private Applicant getApplicantInfo(int ApplicantID) {
+        if (Applicants.get(ApplicantID) == null) {
+            throw new NullPointerException("Applicant ID " + String.format("%06x", ApplicantID) + " does not exist.\n");
+        }
         return Applicants.get(ApplicantID);
     }
 
-    public void addApplication(Application newApplication) {
-        try {
-            if ((Integer) newApplication.getApplicantID() == null) {
-                throw new NullPointerException("Application's applicant doesn't exist.");
-            }
-            if ((Integer) newApplication.getScholarshipID() == null) {
-                throw new NullPointerException("Application's scholarship doesn't exist.");
-            }
-
-            getApplicantInfo(newApplication.getApplicantID()).addApplication(newApplication.getID());
-            Scholarship scholarship = getScholarshipInfo(newApplication.getScholarshipID());
-            scholarship.addApplication(newApplication.getID());
-            Applications.put(newApplication.getID(), newApplication);
-            ApplicationSearchInfo.add(newApplication.getID());
-
-            if (!isApplicationMatch(newApplication, scholarship)) {
-                newApplication.setScore(0);
-            }
+    private Application getApplicationInfo(int ApplicationID) {
+        if (Applications.get(ApplicationID) == null) {
+            throw new NullPointerException("Application ID " + String.format("%06x", ApplicationID) + " does not exist.\n");
         }
-        catch (NullPointerException except) {
-            System.out.println(except.getMessage());
+        return Applications.get(ApplicationID);
+    }
+
+    public void addApplication(Application newApplication) {
+        getApplicantInfo(newApplication.getApplicantID()).addApplication(newApplication.getID());
+        Scholarship scholarship = getScholarshipInfo(newApplication.getScholarshipID());
+        scholarship.addApplication(newApplication.getID());
+        Applications.put(newApplication.getID(), newApplication);
+
+        if (!isApplicationMatch(newApplication, scholarship)) {
+            newApplication.setScore(0);
         }
     }
 
@@ -127,13 +133,56 @@ public class ScholarshipApplicationManager {
         ApplicantSearchInfo.put(newApplicant.getName(), newApplicant.getID());
     }
 
-    public String applicationToString(Application application) {
+    public String applicationToString(int applicationID) {
+        Application application = getApplicationInfo(applicationID);
         Applicant applicant = getApplicantInfo(application.getApplicantID());
-        // return ("Application: " + String.format("%06x", applicant.getID()) + "\n" + "Applicant GPA: " + applicant.getGPA() + "\n" + "Application Letter: " + application.getLetter() + "\n");
-        return ("Application: " + application.getID() + "\n" + "Applicant GPA: " + applicant.getGPA() + "\n" + "Application Letter: " + application.getLetter() + "\n" + "Application Score: " + application.getScore() + "\n");
+        return ("Application: " + String.format("%06x", applicant.getID()) + "\nGPA: " + applicant.getGPA() + "\nLetter: " + application.getLetter() + "\nScore: " + application.getScore() + "\n");
     }
 
-    public boolean isApplicationMatch(Application application, Scholarship scholarship) {
+    public String applicantToString(int applicantID) {
+        Applicant applicant = getApplicantInfo(applicantID);
+        return ("Applicant: " + applicant.getName() + "\nID: " + String.format("%06x", applicant.getID()) + "\nGPA: " + applicant.getGPA() + "\n" + "\nGPA: " + applicant.getGPA() + "\nMajor: " + applicant.getMajor() + "\nNumber of Applications: " + applicant.getApplicationIDs().size() + "\n");
+    }
+
+    public String scholarshipToString(int scholarshipID) {
+        Scholarship scholarship = getScholarshipInfo(scholarshipID);
+        String[] acceptedMajors = scholarship.getAcceptedMajors();
+        String acceptedMajorsString = "";
+        int i = 0;
+        for (String major : acceptedMajors) {
+            acceptedMajorsString += major;
+            ++i;
+            if (i == acceptedMajors.length - 1) {
+                if (i == 1) {
+                    acceptedMajorsString += " and ";
+                }
+                else {
+                    acceptedMajorsString += ", and ";
+                }
+                
+            }
+            else if (i != acceptedMajors.length) {
+                acceptedMajorsString += ", ";
+            }
+        }
+        
+        return ("Scholarship: " + scholarship.getName() + "\nID: " + String.format("%06x", scholarship.getID()) + "\nMinimum GPA: " + scholarship.getMinGPA() + "\nDepartment: " + scholarship.getDepartment() + "\nAccepted Majors: " + acceptedMajorsString
+                + "\nSelection Date: " + scholarship.getSelectionDate().toString() + "\nAwarded Amount: " + scholarship.getAwardAmount() + "\nNumber of Applications: " + scholarship.getApplicationIDs().size() + "\n");
+    }
+
+    public String printApplicationsAboveScore(int ScholarshipID, int minScore) {
+        String result = "";
+        for (Application application : sortApplicants(ScholarshipID)) {
+            if (application.getScore() <= minScore) {
+                break;
+            }
+            result += applicationToString(application.getID());
+        }
+
+        return result;
+    }
+
+    private boolean isApplicationMatch(Application application, Scholarship scholarship) {
         boolean majorMatch = false;
 
         for (String major : scholarship.getAcceptedMajors()) {
