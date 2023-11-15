@@ -4,15 +4,15 @@ import java.util.List;
 
 public class Scholarship {
     private String name;
-    private float minGPA;
+    private double minGPA;
     private String department;
     private String[] acceptedMajors;
     private LocalDate selectionDate;
     private double awardAmount;
-    private List<String> applicationIDs;
-    private String ID;
+    private List<Integer> applicationIDs;
+    private int ID;
 
-    public Scholarship(String name, String ID, float minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount) {
+    public Scholarship(String name, int ID, double minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount) {
         this.name = name;
         this.ID = ID;
         this.minGPA = minGPA;
@@ -20,7 +20,7 @@ public class Scholarship {
         this.acceptedMajors = new String[acceptedMajors.length];
         selectionDate = LocalDate.of(selectionYear, selectionMonth, selectionDay);;
         this.awardAmount = awardAmount;
-        this.applicationIDs = new ArrayList<String>();
+        this.applicationIDs = new ArrayList<Integer>();
 
         try {
             for (int i = 0; i < acceptedMajors.length; ++i) {
@@ -67,7 +67,7 @@ public class Scholarship {
         this.department = department;
     }
 
-    public float getMinGPA() {
+    public double getMinGPA() {
         return minGPA;
     }
 
@@ -83,15 +83,15 @@ public class Scholarship {
         this.selectionDate = selectionDate;
     }
 
-    public List<String> getApplicationIDs() {
+    public List<Integer> getApplicationIDs() {
         return applicationIDs;
     }
 
-    public void addApplication(String applicationID) {
+    public void addApplication(int applicationID) {
         applicationIDs.add(applicationID);
     }
 
-    public String getID() {
+    public int getID() {
         return ID;
     }
 }
