@@ -1,5 +1,15 @@
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        ScholarshipApplicationManager test = new ScholarshipApplicationManager();
+        
+        test.initialize();
+
+        int scholarshipID;
+
+        scholarshipID = test.getScholarshipID("NoName1");
+
+        System.out.println(test.scholarshipToString(scholarshipID));
+
+        System.out.println(test.printApplicationsAboveScore(scholarshipID, -1));
     }
 }
