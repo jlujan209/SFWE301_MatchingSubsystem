@@ -1,4 +1,4 @@
-public class Scholarship {
+public class Scholarships {
     public String scholarshipName;
     public float GPA;
     public String department;
@@ -7,7 +7,7 @@ public class Scholarship {
     public int year;
     public int amount;
 
-    Scholarship(String scholarshipName, float GPA, String department, int month, int date, int year, int amount){
+    Scholarships(String scholarshipName, float GPA, String department, int month, int date, int year, int amount) {
         this.scholarshipName = scholarshipName;
         this.GPA = GPA;
         this.department = department;
@@ -18,6 +18,7 @@ public class Scholarship {
     }
 
     public void printScholarship() {
-        System.out.printf("Name: %s, GPA: %.1f, Department: %s, Due date: %d/%d/%d, Amount: %d$ \n", scholarshipName, GPA, department, month, date, year, amount);
+        System.out.printf("Name: %s, GPA: %.1f, Department: %s, Due date: %d/%d/%d, Amount: %d$ \n", scholarshipName,
+                GPA, department, month, date, year, amount);
     }
 }

@@ -3,13 +3,13 @@ import java.util.Scanner;
 public class Login {
     public static void main(String[] args) {
 
-        Scholarship[] s = new Scholarship[6];
-        s[0] = new Scholarship("Outstading SFWE", 3.2f, "SFWE", 12, 13, 2023, 1000);
-        s[1] = new Scholarship("SFWE Academic distinction", 3.5f, "SFWE", 12, 23, 2023, 500);
-        s[2] = new Scholarship("SFWE Academic Excellence", 4.0f, "SFWE", 12, 23, 2023, 500);
-        s[3] = new Scholarship("Outstading ECE", 3.2f, "ECE", 12, 17, 2023, 3000);
-        s[4] = new Scholarship("Outstading SIE", 3.0f, "SIE", 12, 30, 2023, 1000);
-        s[5] = new Scholarship("SIE Academic distinction", 3.0f, "SIE", 12, 25, 2023, 5000);
+        Scholarships[] s = new Scholarships[6];
+        s[0] = new Scholarships("Outstading SFWE", 3.2f, "SFWE", 12, 13, 2023, 1000);
+        s[1] = new Scholarships("SFWE Academic distinction", 3.5f, "SFWE", 12, 23, 2023, 500);
+        s[2] = new Scholarships("SFWE Academic Excellence", 4.0f, "SFWE", 12, 23, 2023, 500);
+        s[3] = new Scholarships("Outstading ECE", 3.2f, "ECE", 12, 17, 2023, 3000);
+        s[4] = new Scholarships("Outstading SIE", 3.0f, "SIE", 12, 30, 2023, 1000);
+        s[5] = new Scholarships("SIE Academic distinction", 3.0f, "SIE", 12, 25, 2023, 5000);
         // s[0].printScholarship();
 
         try (Scanner scnr = new Scanner(System.in)) {
