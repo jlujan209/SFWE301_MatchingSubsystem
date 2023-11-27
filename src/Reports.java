@@ -4,31 +4,24 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class Reports {
-    private List<String> RankedApplicants;
+    private ArrayList<String> stringsForCSV;
     
-    public Reports(List<String> applicants){
-        this.RankedApplicants = new ArrayList<String>();
-        for(String applicant : applicants){
-            this.RankedApplicants.add(applicant);
-        }
-    }
-
-    public void addApplicant(String Applicant){
-        this.RankedApplicants.add(Applicant);
+    public Reports(ArrayList<String> csvStrings){
+        this.stringsForCSV = csvStrings;
     }
 
     public void toCSV(String ScholarshipName){
         String csvFile = ScholarshipName + ".csv";
         
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))){
-            for(int i = 0; i < RankedApplicants.size(); i++){
-                bw.write(RankedApplicants.get(i) + "\n");
+            for(String x : stringsForCSV){
+                bw.write(x + "\n");
             }
         }
         catch(IOException error){
             error.printStackTrace();
         }
     }
+
 }
