@@ -234,7 +234,24 @@ public class ScholarshipApplicationManager {
 
         return result;
     }
-
+public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, String department,String acceptedMajor,double awardAmount){
+    	Enumeration<Integer> keys = Scholarships.keys();
+    	ArrayList<Scholarship> qualifiedScholarships = new ArrayList<Scholarship>();
+    	while(keys.hasMoreElements()) {
+    		int key = keys.nextElement();
+    		boolean majorCheck = false;
+    		for(String major : Scholarships.get(key).getAcceptedMajors()) {
+    			if(acceptedMajor.equals(major)) {
+    				majorCheck = true;
+    			}
+    			
+    		}
+    		if(minGPA < Scholarships.get(key).getMinGPA() && department.equals(Scholarships.get(key).getDepartment()) && majorCheck && awardAmount <= Scholarships.get(key).getAwardAmount() ) {
+    			qualifiedScholarships.add(Scholarships.get(key));
+    		}
+    	}
+    	return qualifiedScholarships;
+    }
     public String printApplicantApplicationsAboveScore(int ApplicantID, int minScore) {
         String result = "";
         for (Application application : sortApplicantApplications(ApplicantID)) {
