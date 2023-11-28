@@ -10,6 +10,6 @@ public class Main {
 
         System.out.println(test.scholarshipToString(scholarshipID));
 
-        System.out.println(test.printApplicationsAboveScore(scholarshipID, -1));
+        System.out.println(test.printScholarshipApplicationsAboveScore(scholarshipID, -1));
     }
 }

@@ -22,20 +22,14 @@ public class Scholarship {
         this.awardAmount = awardAmount;
         this.applicationIDs = new ArrayList<Integer>();
 
-        try {
-            for (int i = 0; i < acceptedMajors.length; ++i) {
-                if (acceptedMajors[i].length() > 4) {
-                    throw new IllegalArgumentException("Accepted majors input string must be at most 4 characters but found "
-                                                       + acceptedMajors[i].length() + " at index " + i + ".");
-                }
-                else {
-                    this.acceptedMajors[i] = new String(acceptedMajors[i]);
-                }
+        for (int i = 0; i < acceptedMajors.length; ++i) {
+            if (acceptedMajors[i].length() > 4) {
+                throw new IllegalArgumentException("Accepted majors input string must be at most 4 characters but found "
+                                                    + acceptedMajors[i].length() + " at index " + i + ".");
             }
-        }
-        catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
+            else {
+                this.acceptedMajors[i] = new String(acceptedMajors[i]);
+            }
         }
     }
 

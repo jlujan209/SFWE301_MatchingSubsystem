@@ -42,10 +42,45 @@ public class ScholarshipApplicationManager {
         addApplication(new Application(getApplicantID("John Doe3"), generateID(), getScholarshipID("NoName1"), "String letter3"));
     }
     
-    private ArrayList<Application> sortApplicants(int ScholarshipID) {
+    private ArrayList<Application> sortScholarshipApplications(int ScholarshipID) {
         ArrayList<Application> sortedList = new ArrayList<Application>();
         Scholarship currScholarship = getScholarshipInfo(ScholarshipID);
         List<Integer> applications = currScholarship.getApplicationIDs();
+        int i;
+
+        for (int application : applications) {
+            Application currApplication = getApplicationInfo(application);
+            if (sortedList.isEmpty()) {
+                sortedList.add(currApplication);
+            }
+            else {
+                i = 0;
+                for (Application tempApplication : sortedList) {
+                    if (currApplication.getScore() > tempApplication.getScore()) {
+                        break;
+                    }
+                    else if ((currApplication.getScore() == tempApplication.getScore())) {
+                        if (getApplicantInfo(currApplication.getApplicantID()).getGPA() > getApplicantInfo(tempApplication.getApplicantID()).getGPA()) {
+                            break;
+                        }
+                        else if ((Math.abs(getApplicantInfo(currApplication.getApplicantID()).getGPA() - getApplicantInfo(tempApplication.getApplicantID()).getGPA())) <= 0.01) {
+                            if (currApplication.getID() > tempApplication.getID()) {
+                                break;
+                            }
+                        }
+                    }
+                    ++i;
+                }
+                sortedList.add(i, currApplication);
+            }
+        }
+        return sortedList;
+    }
+
+    private ArrayList<Application> sortApplicantApplications(int ApplicantID) {
+        ArrayList<Application> sortedList = new ArrayList<Application>();
+        Applicant currApplicant = getApplicantInfo(ApplicantID);
+        List<Integer> applications = currApplicant.getApplicationIDs();
         int i;
 
         for (int application : applications) {
@@ -170,9 +205,21 @@ public class ScholarshipApplicationManager {
                 + "\nSelection Date: " + scholarship.getSelectionDate().toString() + "\nAwarded Amount: " + scholarship.getAwardAmount() + "\nNumber of Applications: " + scholarship.getApplicationIDs().size() + "\n");
     }
 
-    public String printApplicationsAboveScore(int ScholarshipID, int minScore) {
+    public String printScholarshipApplicationsAboveScore(int ScholarshipID, int minScore) {
         String result = "";
-        for (Application application : sortApplicants(ScholarshipID)) {
+        for (Application application : sortScholarshipApplications(ScholarshipID)) {
+            if (application.getScore() <= minScore) {
+                break;
+            }
+            result += applicationToString(application.getID());
+        }
+
+        return result;
+    }
+
+    public String printApplicantApplicationsAboveScore(int ApplicantID, int minScore) {
+        String result = "";
+        for (Application application : sortApplicantApplications(ApplicantID)) {
             if (application.getScore() <= minScore) {
                 break;
             }
