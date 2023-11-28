@@ -10,69 +10,108 @@ public class Login {
 
             boolean loggedIn = false;
             int numInputs = 0;
+            boolean exit = false;
+            boolean isAdmin = false;
+            int action;
+            char actionName;
+            boolean validInput;
+            boolean internalExit = false;
 
-            while (!loggedIn) {
-                System.out.println("Username: ");
-                String userName = scnr.nextLine();
+            while (!exit) {
+                Applicant currUser = null;
+                String userName = null;
+                validInput = false;
 
-                if ((manager.getApplicantID(userName) != null) && (manager.getApplicantInfo(manager.getApplicantID(userName)) != null)) {
-                    Applicant currUser = manager.getApplicantInfo(manager.getApplicantID(userName));
-                    loggedIn = true;
-                    System.out.printf("Hello " + currUser.getName() + "!\n\n");
-                    numInputs += 1;
-                    System.out.println("Would you like to... \n" + numInputs + ") logout");
-                    if ((currUser.getScholarshipIDs() != null) && (currUser.getScholarshipIDs().isEmpty())) {
-                        numInputs += 1;
-                        System.out.println(" " + numInputs + ") review scholarship info");
+                while (!validInput) {
+                    System.out.println("Would you like to exit?\n(y/n): ");
+                    actionName = scnr.next().charAt(0);
+                    scnr.nextLine();
+                    if (actionName == 'n') {
+                        validInput = true;
+                    } else if (actionName == 'y') {
+                        validInput = true;
+                        exit = true;
                     }
-                    else if (!currUser.getApplicationIDs().isEmpty()) {
-                        numInputs += 1;
-                        System.out.println(" " + numInputs + ") review applications");
-                    }
+                }
 
-                    System.out.println("2) review scholarship info \n Type the number to the left of desired action. \n Action: ");
+                while ((!loggedIn) && (!exit)) {
+                    System.out.println("Username: ");
+                    userName = scnr.nextLine();
 
-
-
-
-
-
-
-
-
-
-
-
-
-                    System.out.println("Choose user action: 1 = view all available scholarships according to desiring criteria.");
-                    int action = scnr.nextInt();
-                    if (action == 1) {
-                        System.out.println("Enter search criteria minimum accepted GPA: ");
-                        float gpa = scnr.nextFloat();
-                        System.out.println("Enter search criteria scholarship department(s): ");
-                        String department = scnr.next();
-                        System.out.println("Enter search criteria rewarded amount: ");
-                        int amount = scnr.nextInt();
-                        System.out.printf(
-                                "Scholarships according to desiring criteria: gpa: %.1f, departments: %s, amount: %d$\n",
-                                gpa,
-                                department,
-                                amount);
-                        ArrayList<Scholarship> scholarships = manager.findScholarshipSpecificCriteria(gpa, department, amount);
-                        for (int i = 0; i < scholarships.size(); i++) {
-                            manager.scholarshipToString(scholarships.get(i).getID());
-                        }
-                    }
-                    else if (action == 2) {
-                        for (int i = 0; i < currUser.getScholarshipIDs().size(); i++) {
-                            System.out.println(manager.scholarshipToString(currUser.getScholarshipIDs().get(i)));
-                        }
+                    if ((manager.getApplicantID(userName) != null) && (manager.getApplicantInfo(manager.getApplicantID(userName)) != null)) {
+                        currUser = manager.getApplicantInfo(manager.getApplicantID(userName));
+                        loggedIn = true;
+                        System.out.println("Hello " + currUser.getName() + "!\n");
                     }
                     else {
-                        System.out.println("Invalid action");
+                        System.out.println("Username " + userName + " does not exist.\n");
                     }
-                } else {
-                    System.out.println("Please login again");
+                }
+
+                while (loggedIn) {
+                    numInputs = 1;
+                    if ((currUser.getScholarshipIDs() != null) && !(currUser.getScholarshipIDs().isEmpty())) {
+                        System.out.println("Would you like to...\n 1) logout");
+                        System.out.println(" 2) review scholarship info");
+                        isAdmin = true;
+                    }
+                    else if (!currUser.getApplicationIDs().isEmpty()) {
+                        System.out.println("Would you like to...\n 1) logout");
+                        System.out.println(" 2) review applications");
+                    }
+                    else {
+                        System.out.println("User " + userName + " has no access to scholarships or applications.\n");
+                        loggedIn = false;
+                        break;
+                    }
+
+                    System.out.println("Type the number to the left of desired action. \nAction: ");
+
+                    action = scnr.nextInt();
+                    scnr.nextLine();
+                    if (action == 1) {
+                        loggedIn = false;
+                    }
+                    else if ((action == 2) && isAdmin) {
+                        for (int i = 0; i < currUser.getScholarshipIDs().size(); i++) {
+                            System.out.println((i + 1) + ") " + manager.getScholarshipInfo(currUser.getScholarshipIDs().get(i)).getName());
+                        }
+                        
+                        while(action != 0) {
+                            System.out.println("Type the number to the left of scholarship to view or type 0 to return to home page. /n View: ");
+
+                            action = scnr.nextInt();
+                            scnr.nextLine();
+                            if ((action > 0) && (action <= currUser.getScholarshipIDs().size())) {
+                                System.out.println(manager.scholarshipToString(currUser.getScholarshipIDs().get(action - 1)));
+                                
+                                action = 0;
+                                internalExit = false;
+                                while(!internalExit) {
+                                    System.out.println("Would you like to...\n 1) review applications\n 2) Exit /n Type the number to the left of desired action. /n Action: ");
+
+                                    action = scnr.nextInt();
+                                    scnr.nextLine();
+                                    if (action == 1) {
+                                        System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.\nAction: ");
+                                        System.out.println(manager.scholarshipToString(currUser.getScholarshipIDs().get(action - 1)));
+                                    }
+                                    else if (action == 2) {
+                                        internalExit = true;
+                                    }
+                                    else {
+                                        System.out.println("Invalid action");
+                                    }
+                                }
+                            }
+                            else if (action != 0) {
+                                System.out.println("Invalid action");
+                            }
+                        }
+                    }
+                    else if (action == 0) {
+                        loggedIn = false;
+                    }
                 }
             }
             System.out.println("Bye!");
