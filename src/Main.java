@@ -12,9 +12,5 @@ public class Main {
         scholarshipID = test.getScholarshipID("NoName1");
 
         System.out.println(test.scholarshipToString(scholarshipID));
-
-        System.out.println(test.printApplicationsAboveScore(scholarshipID, -1));
-        
-        test.toReports();
     }
 }
