@@ -244,7 +244,7 @@ public class ScholarshipApplicationManager {
 
         for(Integer x: ScholarshipIDs){
             Scholarship curScholarship = Scholarships.get(x);
-            ArrayList<Application> sortedApplications = sortApplicants(x);
+            ArrayList<Application> sortedApplications = sortScholarshipApplications(x);
             ArrayList<String> csvStrings = toCSVString(sortedApplications);
             Reports newCSV = new Reports(csvStrings);
             newCSV.toCSV(curScholarship.getName());
