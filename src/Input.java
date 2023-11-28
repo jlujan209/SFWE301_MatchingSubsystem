@@ -31,10 +31,11 @@ public class Input {
             String Name = "";
             double minGPA = 0.0;
             String department = "";
-            String[] acceptedMajors = new String[1];
+            String[] acceptedMajors = new String[0];
             int day = 0, month = 0, year = 0;
             float awardAmount = 0;
             int ID = 0;
+            int ownerID = 0;
 
 
             for(int i = 0; i < arr.length; i++){
@@ -49,10 +50,10 @@ public class Input {
                         department = arr[i];
                     break;
                     case 3:
-                        acceptedMajors = arr[i].split("|");
+                        acceptedMajors = arr[i].split("[|]");
                     break;
                     case 4:
-                        String[] date = arr[i].split("-");
+                        String[] date = arr[i].split("[-]");
                         day = Integer.parseInt(date[0]);
                         month = Integer.parseInt(date[1]);
                         year = Integer.parseInt(date[2]);
@@ -63,12 +64,15 @@ public class Input {
                     case 6:
                         ID = Integer.parseInt(arr[i]);
                     break;
+                    case 7:
+                        ownerID = Integer.parseInt(arr[i]);
+                    break;
                     default:
                         break;
                 }
             }
 
-            Scholarship curr = new Scholarship(Name, ID, minGPA, department, acceptedMajors, day, month, year, awardAmount);
+            Scholarship curr = new Scholarship(Name, ID, ownerID, minGPA, department, acceptedMajors, day, month, year, awardAmount);
             result.add(curr);
         }
 

@@ -1,0 +1,4 @@
+Application ID,Applicant ID,Letter,Score,Application Status
+2,2,myLetter three,1,APPLIED
+0,2,myLetter,1,APPLIED
+4,3,myLetter five,0,APPLIED

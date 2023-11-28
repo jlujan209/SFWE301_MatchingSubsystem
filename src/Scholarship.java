@@ -11,10 +11,12 @@ public class Scholarship {
     private double awardAmount;
     private List<Integer> applicationIDs;
     private int ID;
+    private int ownerID;
 
-    public Scholarship(String name, int ID, double minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount) {
+    public Scholarship(String name, int ID, int ownerID, double minGPA, String department, String[] acceptedMajors, int selectionDay, int selectionMonth, int selectionYear, float awardAmount) {
         this.name = name;
         this.ID = ID;
+        this.ownerID = ownerID;
         this.minGPA = minGPA;
         this.department = department;
         this.acceptedMajors = new String[acceptedMajors.length];
@@ -87,5 +89,9 @@ public class Scholarship {
 
     public int getID() {
         return ID;
+    }
+
+    public int getOwnerID() {
+        return ownerID;
     }
 }

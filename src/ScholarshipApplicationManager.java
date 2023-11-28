@@ -1,10 +1,10 @@
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.List;
 import java.lang.Math;
 import java.util.Set;
-import java.util.Enumeration;
 
 
 public class ScholarshipApplicationManager {
@@ -36,11 +36,11 @@ public class ScholarshipApplicationManager {
         ArrayList<Scholarship> scholarships = input.readScholarshipCSV(scholarshipCSVFilename);
         ArrayList<Applicant> applicants = input.readApplicantsCSV(applicantCSVFilename);
 
-        for(Scholarship s : scholarships){
-            addScholarship(s);
-        }
         for(Applicant A : applicants){
             addApplicant(A);
+        }
+        for(Scholarship s : scholarships){
+            addScholarship(s);
         }
         for(Application a : applications){
             addApplication(a);
@@ -50,13 +50,12 @@ public class ScholarshipApplicationManager {
     public void initialize() {
         String[] majors = {"NA", "NA2", "NA3"};
 
-        addScholarship(new Scholarship("NoName1", generateID(), 3.4, "NA1", majors, 1, 1, 2001, -1));
-        addScholarship(new Scholarship("NoName2", generateID(), 4.0, "NA2", majors, 2, 2, 2002, -2));
-        addScholarship(new Scholarship("NoName3", generateID(), 4.0, "NA3", majors, 3, 3, 2003, -3));
-
         addApplicant(new Applicant("John Doe1", generateID(), 3.3, "NA", 3));
         addApplicant(new Applicant("John Doe2", generateID(), 4.2, "NA", 3));
         addApplicant(new Applicant("John Doe3", generateID(), 3.4, "NA", 3));
+        addScholarship(new Scholarship("NoName1", generateID(), getApplicantID("John Doe1"), 3.4, "NA1", majors, 1, 1, 2001, -1));
+        addScholarship(new Scholarship("NoName2", generateID(), getApplicantID("John Doe1"), 4.0, "NA2", majors, 2, 2, 2002, -2));
+        addScholarship(new Scholarship("NoName3", generateID(), getApplicantID("John Doe1"), 4.0, "NA3", majors, 3, 3, 2003, -3));
         addApplication(new Application(getApplicantID("John Doe1"), generateID(), getScholarshipID("NoName1"), "String letter1"));
         addApplication(new Application(getApplicantID("John Doe2"), generateID(), getScholarshipID("NoName1"), "String letter2"));
         addApplication(new Application(getApplicantID("John Doe3"), generateID(), getScholarshipID("NoName1"), "String letter3"));
@@ -133,34 +132,28 @@ public class ScholarshipApplicationManager {
     }
 
     public Integer getScholarshipID(String ScholarshipName) {
-        if (ScholarshipSearchInfo.get(ScholarshipName) == null) {
-            throw new NullPointerException("Scholarship " + ScholarshipName + " does not exist.\n");
-        }
         return ScholarshipSearchInfo.get(ScholarshipName);
     }
 
     public Integer getApplicantID(String ApplicantName) {
-        if (ApplicantSearchInfo.get(ApplicantName) == null) {
-            throw new NullPointerException("Applicant " + ApplicantName + " does not exist.\n");
-        }
         return ApplicantSearchInfo.get(ApplicantName);
     }
 
-    private Scholarship getScholarshipInfo(int ScholarshipID) {
+    public Scholarship getScholarshipInfo(int ScholarshipID) {
         if (Scholarships.get(ScholarshipID) == null) {
             throw new NullPointerException("Scholarship ID " + String.format("%06x", ScholarshipID) + " does not exist.\n");
         }
         return Scholarships.get(ScholarshipID);
     }
 
-    private Applicant getApplicantInfo(int ApplicantID) {
+    public Applicant getApplicantInfo(int ApplicantID) {
         if (Applicants.get(ApplicantID) == null) {
-            throw new NullPointerException("Applicant ID " + String.format("%06x", ApplicantID) + " does not exist.\n");
+            throw new NullPointerException("Application ID " + String.format("%06x", ApplicantID) + " does not exist.\n");
         }
         return Applicants.get(ApplicantID);
     }
 
-    private Application getApplicationInfo(int ApplicationID) {
+    public Application getApplicationInfo(int ApplicationID) {
         if (Applications.get(ApplicationID) == null) {
             throw new NullPointerException("Application ID " + String.format("%06x", ApplicationID) + " does not exist.\n");
         }
@@ -179,6 +172,7 @@ public class ScholarshipApplicationManager {
     }
 
     public void addScholarship(Scholarship newScholarship) {
+        getApplicantInfo(newScholarship.getOwnerID()).addScholarship(newScholarship.getID());
         Scholarships.put(newScholarship.getID(), newScholarship);
         ScholarshipSearchInfo.put(newScholarship.getName(), newScholarship.getID());
     }
@@ -236,7 +230,8 @@ public class ScholarshipApplicationManager {
 
         return result;
     }
-public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, String department,String acceptedMajor,double awardAmount){
+    
+    public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, String acceptedMajor, double awardAmount) {
     	Enumeration<Integer> keys = Scholarships.keys();
     	ArrayList<Scholarship> qualifiedScholarships = new ArrayList<Scholarship>();
     	while(keys.hasMoreElements()) {
@@ -248,12 +243,13 @@ public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, Str
     			}
     			
     		}
-    		if(minGPA < Scholarships.get(key).getMinGPA() && department.equals(Scholarships.get(key).getDepartment()) && majorCheck && awardAmount <= Scholarships.get(key).getAwardAmount() ) {
+    		if((minGPA < Scholarships.get(key).getMinGPA()) && majorCheck && (awardAmount <= Scholarships.get(key).getAwardAmount())) {
     			qualifiedScholarships.add(Scholarships.get(key));
     		}
     	}
     	return qualifiedScholarships;
     }
+
     public String printApplicantApplicationsAboveScore(int ApplicantID, int minScore) {
         String result = "";
         for (Application application : sortApplicantApplications(ApplicantID)) {
@@ -275,7 +271,7 @@ public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, Str
         return (getApplicantInfo(application.getApplicantID()).getGPA() >= scholarship.getMinGPA()) && majorMatch;
     }
 
-    public void toReports(){
+    public void toReports() {
         Set<Integer> ScholarshipIDs = Scholarships.keySet();
 
         for(Integer x: ScholarshipIDs){
@@ -288,7 +284,7 @@ public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, Str
 
     }
 
-    private ArrayList<String> toCSVString(ArrayList<Application> list){
+    private ArrayList<String> toCSVString(ArrayList<Application> list) {
         ArrayList<String> resultList = new ArrayList<String>();
         resultList.add("Application ID,Applicant ID,Letter,Score,Application Status");
         for(Application i : list){

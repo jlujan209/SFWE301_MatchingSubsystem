@@ -10,6 +10,7 @@ public class Applicant {
     private String major;
     private int year;
     private List<Integer> applicationIDs;
+    private List<Integer> scholarshipIDs;
 
     public Applicant(String name, int ID, double GPA, String major, int year) {
         this.name = name;
@@ -18,11 +19,16 @@ public class Applicant {
         this.major = major;
         this.year = year;
         this.applicationIDs = new ArrayList<Integer>();
+        this.scholarshipIDs = new ArrayList<Integer>();
 
     }
 
     public void addApplication(int applicationID) {
         applicationIDs.add(applicationID);
+    }
+
+    public void addScholarship(int scholarshipID) {
+        scholarshipIDs.add(scholarshipID);
     }
 
     public int getID() {
@@ -43,6 +49,10 @@ public class Applicant {
 
     public List<Integer> getApplicationIDs() {
         return applicationIDs;
+    }
+
+    public List<Integer> getScholarshipIDs() {
+        return scholarshipIDs;
     }
 
     public ArrayList<Scholarship> findScholarships(Hashtable<Integer, Scholarship> Scholarships) {
