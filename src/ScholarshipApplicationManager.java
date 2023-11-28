@@ -28,6 +28,23 @@ public class ScholarshipApplicationManager {
         return ID;
     }
 
+    public void initializeWithCSVs(String scholarshipCSVFilename, String applicantCSVFilename, String applicationCSVFilename){
+        Input input = new Input();
+        ArrayList<Application> applications = input.readApplicationsCSV(applicationCSVFilename);
+        ArrayList<Scholarship> scholarships = input.readScholarshipCSV(scholarshipCSVFilename);
+        ArrayList<Applicant> applicants = input.readApplicantsCSV(applicantCSVFilename);
+
+        for(Scholarship s : scholarships){
+            addScholarship(s);
+        }
+        for(Applicant A : applicants){
+            addApplicant(A);
+        }
+        for(Application a : applications){
+            addApplication(a);
+        }
+    }
+
     public void initialize() {
         String[] majors = {"NA", "NA2", "NA3"};
 

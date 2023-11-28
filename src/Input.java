@@ -62,7 +62,7 @@ public class Input {
                     break;
                     case 6:
                         ID = Integer.parseInt(arr[i]);
-                
+                    break;
                     default:
                         break;
                 }
@@ -73,6 +73,85 @@ public class Input {
         }
 
         return result;
+    }
+
+    public ArrayList<Applicant> readApplicantsCSV(String filename){
+        ArrayList<String[]> input = readCSV(filename);
+        ArrayList<Applicant> result = new ArrayList<Applicant>();
+
+        for(String[] arr : input){
+            String Name = "";
+            double GPA = 0.0;
+            String major = "";
+            int year = 0;
+            int ID = 0;
+
+
+            for(int i = 0; i < arr.length; i++){
+                switch (i) {
+                    case 0:
+                        Name = arr[i];
+                    break;
+                    case 1:
+                        ID = Integer.parseInt(arr[i]);
+                    break;
+                    case 2:
+                        GPA = Double.parseDouble(arr[i]);
+                    break;
+                    case 3:
+                        major = arr[i];
+                    break;
+                    case 4:
+                        year = Integer.parseInt(arr[i]);
+                    break;
+                    default:
+                        break;
+                }
+            }
+
+            Applicant curr = new Applicant(Name, ID, GPA, major, year);
+            result.add(curr);
+        }
+
+        return result;
+
+    }
+
+    public ArrayList<Application> readApplicationsCSV(String filename){
+        ArrayList<String[]> input = readCSV(filename);
+        ArrayList<Application> result = new ArrayList<Application>();
+
+        for(String[] arr : input){
+            int applicantID = 0;
+            int ID = 0;
+            int scholarshipID = 0;
+            String letter = "";
+
+            for(int i = 0; i < arr.length; i++){
+                switch (i) {
+                    case 0:
+                        applicantID = Integer.parseInt(arr[i]);
+                    break;
+                    case 1:
+                        ID = Integer.parseInt(arr[i]);
+                    break;
+                    case 2:
+                        scholarshipID = Integer.parseInt(arr[i]);
+                    break;
+                    case 3:
+                        letter =arr[i];
+                    break;
+                    default:
+                        break;
+                }
+            }
+
+            Application curr = new Application(applicantID, ID, scholarshipID, letter);
+            result.add(curr);
+        }
+
+        return result;
+
     }
 
 }
