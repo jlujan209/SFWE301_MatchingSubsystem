@@ -219,13 +219,13 @@ public class ScholarshipApplicationManager {
                 + "\nSelection Date: " + scholarship.getSelectionDate().toString() + "\nAwarded Amount: " + scholarship.getAwardAmount() + "\nNumber of Applications: " + scholarship.getApplicationIDs().size() + "\n");
     }
 
-    public String printScholarshipApplicationsAboveScore(int ScholarshipID, int minScore) {
-        String result = "";
+    public ArrayList<Application> getScholarshipApplicationsAboveScore(int ScholarshipID, int minScore) {
+        ArrayList<Application> result = new ArrayList<Application>();
         for (Application application : sortScholarshipApplications(ScholarshipID)) {
-            if (application.getScore() <= minScore) {
+            if (application.getScore() < minScore) {
                 break;
             }
-            result += applicationToString(application.getID());
+            result.add(getApplicationInfo(application.getID()));
         }
 
         return result;
@@ -248,18 +248,6 @@ public class ScholarshipApplicationManager {
     		}
     	}
     	return qualifiedScholarships;
-    }
-
-    public String printApplicantApplicationsAboveScore(int ApplicantID, int minScore) {
-        String result = "";
-        for (Application application : sortApplicantApplications(ApplicantID)) {
-            if (application.getScore() <= minScore) {
-                break;
-            }
-            result += applicationToString(application.getID());
-        }
-
-        return result;
     }
 
     private boolean isApplicationMatch(Application application, Scholarship scholarship) {
