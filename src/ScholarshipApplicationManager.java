@@ -3,6 +3,7 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.List;
 import java.lang.Math;
+import java.util.Set;
 
 public class ScholarshipApplicationManager {
     private final int MAX_6_BIT_HEX_NUM = 16777216 - 1;
@@ -236,5 +237,30 @@ public class ScholarshipApplicationManager {
             majorMatch = majorMatch || major.equals(getApplicantInfo(application.getApplicantID()).getMajor());
         }
         return (getApplicantInfo(application.getApplicantID()).getGPA() >= scholarship.getMinGPA()) && majorMatch;
+    }
+
+    public void toReports(){
+        Set<Integer> ScholarshipIDs = Scholarships.keySet();
+
+        for(Integer x: ScholarshipIDs){
+            Scholarship curScholarship = Scholarships.get(x);
+            ArrayList<Application> sortedApplications = sortApplicants(x);
+            ArrayList<String> csvStrings = toCSVString(sortedApplications);
+            Reports newCSV = new Reports(csvStrings);
+            newCSV.toCSV(curScholarship.getName());
+        }
+
+    }
+
+    private ArrayList<String> toCSVString(ArrayList<Application> list){
+        ArrayList<String> resultList = new ArrayList<String>();
+        resultList.add("Application ID,Applicant ID,Letter,Score,Application Status");
+        for(Application i : list){
+            String toAdd = Integer.toString(i.getID()) + "," + Integer.toString(i.getApplicantID()) +
+                "," + i.getLetter() + "," + Integer.toString(i.getScore()) + "," + i.getStatus().name();
+            resultList.add(toAdd);
+            }
+
+        return resultList;
     }
 }
