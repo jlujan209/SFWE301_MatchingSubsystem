@@ -36,7 +36,7 @@ public class Login {
                     loggined = true;
                     System.out.printf("User is Successfully loggined...\n\n");
                     System.out.println(
-                            "Choose user action: 1 = view all available scholarships according to desiring criteria, 2 = view application status ");
+                            "Choose user action: 1 = view all available scholarships according to desiring criteria, 2 = view application status, 3 = Show eligable scholarships for an applicant, 4 = show eligable scholarships for an applicant");
                     int action = scnr.nextInt();
                     if (action == 1) {
                         System.out.println("Enter search criteria minimum accepted GPA: ");
