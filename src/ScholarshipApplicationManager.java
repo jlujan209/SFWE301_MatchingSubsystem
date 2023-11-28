@@ -4,6 +4,8 @@ import java.util.Random;
 import java.util.List;
 import java.lang.Math;
 import java.util.Set;
+import java.util.Enumeration;
+
 
 public class ScholarshipApplicationManager {
     private final int MAX_6_BIT_HEX_NUM = 16777216 - 1;
@@ -26,6 +28,23 @@ public class ScholarshipApplicationManager {
         int ID = rand.nextInt(MAX_6_BIT_HEX_NUM);
         
         return ID;
+    }
+
+    public void initializeWithCSVs(String scholarshipCSVFilename, String applicantCSVFilename, String applicationCSVFilename){
+        Input input = new Input();
+        ArrayList<Application> applications = input.readApplicationsCSV(applicationCSVFilename);
+        ArrayList<Scholarship> scholarships = input.readScholarshipCSV(scholarshipCSVFilename);
+        ArrayList<Applicant> applicants = input.readApplicantsCSV(applicantCSVFilename);
+
+        for(Scholarship s : scholarships){
+            addScholarship(s);
+        }
+        for(Applicant A : applicants){
+            addApplicant(A);
+        }
+        for(Application a : applications){
+            addApplication(a);
+        }
     }
 
     public void initialize() {
@@ -217,7 +236,24 @@ public class ScholarshipApplicationManager {
 
         return result;
     }
-
+public ArrayList<Scholarship> findScholarshipSpecificCriteria(double minGPA, String department,String acceptedMajor,double awardAmount){
+    	Enumeration<Integer> keys = Scholarships.keys();
+    	ArrayList<Scholarship> qualifiedScholarships = new ArrayList<Scholarship>();
+    	while(keys.hasMoreElements()) {
+    		int key = keys.nextElement();
+    		boolean majorCheck = false;
+    		for(String major : Scholarships.get(key).getAcceptedMajors()) {
+    			if(acceptedMajor.equals(major)) {
+    				majorCheck = true;
+    			}
+    			
+    		}
+    		if(minGPA < Scholarships.get(key).getMinGPA() && department.equals(Scholarships.get(key).getDepartment()) && majorCheck && awardAmount <= Scholarships.get(key).getAwardAmount() ) {
+    			qualifiedScholarships.add(Scholarships.get(key));
+    		}
+    	}
+    	return qualifiedScholarships;
+    }
     public String printApplicantApplicationsAboveScore(int ApplicantID, int minScore) {
         String result = "";
         for (Application application : sortApplicantApplications(ApplicantID)) {
@@ -244,7 +280,7 @@ public class ScholarshipApplicationManager {
 
         for(Integer x: ScholarshipIDs){
             Scholarship curScholarship = Scholarships.get(x);
-            ArrayList<Application> sortedApplications = sortApplicants(x);
+            ArrayList<Application> sortedApplications = sortScholarshipApplications(x);
             ArrayList<String> csvStrings = toCSVString(sortedApplications);
             Reports newCSV = new Reports(csvStrings);
             newCSV.toCSV(curScholarship.getName());
