@@ -93,8 +93,21 @@ public class Login {
                                     action = scnr.nextInt();
                                     scnr.nextLine();
                                     if (action == 1) {
-                                        System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.\nAction: ");
-                                        System.out.println(manager.scholarshipToString(currUser.getScholarshipIDs().get(action - 1)));
+                                        while(!internalExit) {
+                                            System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.\nAction: ");
+                                            action = scnr.nextInt();
+                                            scnr.nextLine();
+                                            if (action == 1) {
+                                                System.out.println(manager.scholarshipToString(currUser.getScholarshipIDs().get(action - 1)));
+                                            }
+                                            else if (action == 2) {
+                                                internalExit = true;
+                                            }
+                                            else {
+                                                System.out.println("Invalid action");
+                                            }
+                                        }
+                                        internalExit = false;
                                     }
                                     else if (action == 2) {
                                         internalExit = true;
