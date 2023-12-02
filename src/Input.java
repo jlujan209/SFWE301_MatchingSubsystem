@@ -8,11 +8,16 @@ public class Input {
         ArrayList<String[]> in = new ArrayList<String[]>();
         String csvFile = "src/" + filename;
         String line;
+        int discardFirstLine = 1;
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))){
 
             while((line = br.readLine()) != null){
                 String[] splitLine = line.split(",");
+                if(discardFirstLine == 1){
+                    discardFirstLine++;
+                    continue;
+                }
                 in.add(splitLine);
             }
         }
