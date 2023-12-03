@@ -168,6 +168,7 @@ public class ScholarshipApplicationManager {
 
         if (!isApplicationMatch(newApplication, scholarship)) {
             newApplication.setScore(0);
+            newApplication.setStatus(1);
         }
     }
 
@@ -250,7 +251,7 @@ public class ScholarshipApplicationManager {
             if (application.getScore() < minScore) {
                 break;
             }
-            else if ((application.getStatus() != 3) && (application.getStatus() != 4)) {
+            else if (!((application.getStatus() == 3) && (minScore != 0)) && (application.getStatus() != 4)) {
                 result.add(application);
             }
         }
