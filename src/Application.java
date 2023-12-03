@@ -44,8 +44,23 @@ public class Application {
     return score;
   }
 
-  public ApplicationStatus getStatus() {
-    return status;
+  public int getStatus() {
+    switch (status) {
+      case APPLIED:
+        return 1;
+      case REAPPLIED:
+        return 2;
+      case DENIED:
+        return 3;
+      case NO_LONGER_IN_CONSIDERATION:
+        return 4;
+      case REVIEWED:
+        return 5;
+      case APPROVED:
+        return 6;
+      default:
+        return 0;
+    }
   }
 
   public void setScore(int score) {

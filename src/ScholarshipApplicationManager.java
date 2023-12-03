@@ -185,12 +185,37 @@ public class ScholarshipApplicationManager {
     public String applicationToString(int applicationID) {
         Application application = getApplicationInfo(applicationID);
         Applicant applicant = getApplicantInfo(application.getApplicantID());
-        return ("Application: " + String.format("%06x", applicant.getID()) + "\nGPA: " + applicant.getGPA() + "\nLetter: " + application.getLetter() + "\nScore: " + application.getScore() + "\n");
+        String result = ("Application: " + String.format("%06x", application.getID()) + "\nGPA: " + applicant.getGPA() + "\nLetter: " + application.getLetter() + "\nScore: " + application.getScore() + "\nStatus: ");
+
+        if (application.getStatus() == 1) {
+            result += "APPLIED";
+        }
+        else if (application.getStatus() == 2) {
+            result += "REAPPLIED";
+        }
+        else if (application.getStatus() == 3) {
+            result += "DENIED";
+        }
+        else if (application.getStatus() == 4) {
+            result += "NO_LONGER_IN_CONSIDERATION";
+        }
+        else if (application.getStatus() == 5) {
+            result += "REVIEWED";
+        }
+        else if (application.getStatus() == 6) {
+            result += "APPROVED";
+        }
+        else {
+            result += "UNKNOWN";
+        }
+
+        return result  + "\n";
     }
 
     public String applicantToString(int applicantID) {
         Applicant applicant = getApplicantInfo(applicantID);
         return ("Applicant: " + applicant.getName() + "\nID: " + String.format("%06x", applicant.getID()) + "\nGPA: " + applicant.getGPA() + "\n" + "\nGPA: " + applicant.getGPA() + "\nMajor: " + applicant.getMajor() + "\nNumber of Applications: " + applicant.getApplicationIDs().size() + "\n");
+        
     }
 
     public String scholarshipToString(int scholarshipID) {
@@ -225,7 +250,9 @@ public class ScholarshipApplicationManager {
             if (application.getScore() < minScore) {
                 break;
             }
-            result.add(getApplicationInfo(application.getID()));
+            else if ((application.getStatus() != 3) && (application.getStatus() != 4)) {
+                result.add(application);
+            }
         }
 
         return result;
@@ -277,7 +304,28 @@ public class ScholarshipApplicationManager {
         resultList.add("Application ID,Applicant ID,Letter,Score,Application Status");
         for(Application i : list){
             String toAdd = Integer.toString(i.getID()) + "," + Integer.toString(i.getApplicantID()) +
-                "," + i.getLetter() + "," + Integer.toString(i.getScore()) + "," + i.getStatus().name();
+                "," + i.getLetter() + "," + Integer.toString(i.getScore()) + ",";
+                if (i.getStatus() == 1) {
+                    toAdd += "APPLIED";
+                }
+                else if (i.getStatus() == 2) {
+                    toAdd += "REAPPLIED";
+                }
+                else if (i.getStatus() == 3) {
+                    toAdd += "DENIED";
+                }
+                else if (i.getStatus() == 4) {
+                    toAdd += "NO_LONGER_IN_CONSIDERATION";
+                }
+                else if (i.getStatus() == 5) {
+                    toAdd += "REVIEWED";
+                }
+                else if (i.getStatus() == 6) {
+                    toAdd += "APPROVED";
+                }
+                else {
+                    toAdd += "UNKNOWN";
+                }
             resultList.add(toAdd);
             }
 

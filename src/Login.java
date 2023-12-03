@@ -78,7 +78,9 @@ public class Login {
                         }
                         
                         while(action != 0) {
-                            System.out.println("Type the number to the left of scholarship to view or type 0 to return to home page.\nView: ");
+                            System.out.println("Type the number to the left of scholarship to view or type 0 to return to home page.");
+                            
+                            System.out.print("View: ");
                             Scholarship currScholarship;
                             action = scnr.nextInt();
                             scnr.nextLine();
@@ -88,49 +90,58 @@ public class Login {
                                 action = 0;
                                 internalExit = false;
                                 while(!internalExit) {
-                                    System.out.println("Would you like to...\n 1) review applications\n 2) Exit /n Type the number to the left of desired action. /n Action: ");
+                                    System.out.println(manager.scholarshipToString(currScholarship.getID()));
+                                    
+                                    System.out.println("Would you like to...\n 1) review applications\n 2) Exit \n Type the number to the left of desired action. \n Action: ");
 
                                     action = scnr.nextInt();
                                     scnr.nextLine();
                                     if (action == 1) {
+                                        System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.");
+
                                         while(!internalExit) {
                                             ArrayList<Application> applications;
-                                            System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.\nAction: ");
+                                            System.out.print("Action: ");
                                             action = scnr.nextInt();
                                             scnr.nextLine();
                                             if ((action == 1) || (action == 2)) {
-                                                applications = manager.getScholarshipApplicationsAboveScore(currScholarship.getID(), 1);
+                                                if (action == 1) {
+                                                    applications = manager.getScholarshipApplicationsAboveScore(currScholarship.getID(), 1);
+                                                }
+                                                else {
+                                                    applications = manager.getScholarshipApplicationsAboveScore(currScholarship.getID(), 0);
+                                                }
                                                 for (int i = 0; i < applications.size(); ++i) {
-                                                    System.out.println((i + 1) + ") Application ID: " + applications.get(i).getID());
+                                                    System.out.println((i + 1) + ") Application ID: " + String.format("%06x", applications.get(i).getID()));
                                                     System.out.println("Score: " + applications.get(i).getScore() + "\n");
                                                 }
 
                                                 System.out.println("Type the number next to the application to review or 0 to return to the scholarship information page.");
                                                 
                                                 while(!internalExit) {
-                                                    System.out.println("Application #: ");
+                                                    System.out.print("Application #: ");
                                                     action = scnr.nextInt();
                                                     scnr.nextLine();
                                                     if ((action > 0) && (action <= applications.size())) {
                                                         System.out.println(manager.applicationToString(applications.get(action - 1).getID()));
                                                         
-                                                        System.out.println("Would you like to...\n 1) set application priority score\n 2) remove applicant from consideration\n 3) return to applications page\n Type the number to the left of desired action.");
+                                                        System.out.println("Would you like to...\n 1) set application priority score\n 2) set application status\n 3) return to applications page\n Type the number to the left of desired action.");
                                                 
 
                                                         while(!internalExit) {
-                                                            System.out.println("Action: ");
-                                                            action = scnr.nextInt();
+                                                            System.out.print("Action: ");
+                                                            int action1 = scnr.nextInt();
                                                             scnr.nextLine();
-                                                            if (action == 1) {
+                                                            if (action1 == 1) {
                                                                 System.out.println("Input application priority score.");
 
                                                                 while(!internalExit) {
-                                                                    System.out.println("Score: ");
+                                                                    System.out.print("Score: ");
                                                                     int input = scnr.nextInt();
                                                                     scnr.nextLine();
                                                                     if (input >= 0) {
                                                                         applications.get(action - 1).setScore(input);
-                                                                        System.out.println("Application " + applications.get(action - 1).getID() + " priority score set to " + applications.get(action - 1).getScore() + ".");
+                                                                        System.out.println("Application " + String.format("%06x", applications.get(action - 1).getID()) + " priority score set to " + applications.get(action - 1).getScore() + ".");
                                                                         internalExit = true;
                                                                     }
                                                                     else {
@@ -138,24 +149,38 @@ public class Login {
                                                                     }
                                                                 }
                                                             }
-                                                            else if (action == 2) {
+                                                            else if (action1 == 2) {
                                                                 validInput = false;
-                                                                System.out.println("Are you sure you want to remove applicant " + applications.get(action - 1).getID() + " from consideration?");
+                                                                System.out.println("Would you like to set " + String.format("%06x", applications.get(action - 1).getID()) + " status to (1) denied, (2) reviewed, or (3) approved?");
                                                                 while (!validInput) {
-                                                                    System.out.println("(y/n): ");
-                                                                    actionName = scnr.next().charAt(0);
+                                                                    System.out.print("New Status: ");
+                                                                    action1 = scnr.nextInt();
                                                                     scnr.nextLine();
-                                                                    if (actionName == 'n') {
-                                                                        validInput = true;
-                                                                    } else if (actionName == 'y') {
+                                                                    if (action1 == 1) {
                                                                         validInput = true;
                                                                         applications.get(action - 1).setScore(0);
+                                                                        if (applications.get(action - 1).getStatus() == 2) {
+                                                                            applications.get(action - 1).setStatus(2);
+                                                                        }
+                                                                        else {
+                                                                            applications.get(action - 1).setStatus(1);
+                                                                        }
+
+                                                                        System.out.println("Application: " + String.format("%06x", applications.get(action - 1).getID()) + " status set to denied.");
+                                                                    } else if (action1 == 2) {
+                                                                        validInput = true;
+                                                                        applications.get(action - 1).setStatus(3);
+                                                                        System.out.println("Application: " + String.format("%06x", applications.get(action - 1).getID()) + " status set to reviewed.");
+                                                                    } else if (action1 == 3) {
+                                                                        validInput = true;
+                                                                        applications.get(action - 1).setStatus(4);
+                                                                        System.out.println("Application: " + String.format("%06x", applications.get(action - 1).getID()) + " status set to approved.");
                                                                     }
                                                                 }
 
                                                                 internalExit = true;
                                                             }
-                                                            else if (action == 3) {
+                                                            else if (action1 == 3) {
                                                                 internalExit = true;
                                                             }
                                                             else {
@@ -208,6 +233,24 @@ public class Login {
                             scnr.nextLine();
                             if ((action > 0) && (action <= applications.size())) {
                                 System.out.println(manager.applicationToString(applications.get(action - 1).getID()));
+                                if (applications.get(action - 1).getStatus() == 3) {
+                                    System.out.println("Application " + String.format("%06x", applications.get(action - 1).getID()) + " has been denied. Would you like to resubmit the application?");
+                                    validInput = false;
+                                    while (!validInput) {
+                                        System.out.println("(y/n): ");
+                                        actionName = scnr.next().charAt(0);
+                                        scnr.nextLine();
+                                        if (actionName == 'y') {
+                                            validInput = true;
+                                            applications.get(action - 1).setStatus(0);
+                                            System.out.println("Application " + String.format("%06x", applications.get(action - 1).getID()) + "has been resubmitted.");
+                                        } else if (actionName == 'n') {
+                                            validInput = true;
+                                            exit = true;
+                                        }
+                                    }
+                                }
+
                                 System.out.println("Type the number next to the application to review or 0 to return to the scholarship information page.");
                             }
                             else if (action == 0) {
@@ -304,7 +347,7 @@ public class Login {
                                 }
                                 else {
                                     for (int i = 0; i < scholarships.size(); ++i) {
-                                        System.out.println((i + 1) + manager.scholarshipToString(scholarships.get(i).getID()));
+                                        System.out.println((i + 1) + ") " + manager.scholarshipToString(scholarships.get(i).getID()));
                                     }
                                 }
                                 internalExit = true;
