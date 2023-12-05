@@ -242,7 +242,7 @@ public class ScholarshipApplicationManager {
         }
         
         return ("Scholarship: " + scholarship.getName() + "\nID: " + String.format("%06x", scholarship.getID()) + "\nMinimum GPA: " + scholarship.getMinGPA() + "\nDepartment: " + scholarship.getDepartment() + "\nAccepted Majors: " + acceptedMajorsString
-                + "\nSelection Date: " + scholarship.getSelectionDate().toString() + "\nAwarded Amount: " + scholarship.getAwardAmount() + "\nNumber of Applications: " + scholarship.getApplicationIDs().size() + "\n");
+                + "\nSelection Date: " + scholarship.getSelectionDate().toString() + "\nAwarded Amount: $" + String.format("%.2f", scholarship.getAwardAmount()) + "\nNumber of Applications: " + scholarship.getApplicationIDs().size() + "\n");
     }
 
     public ArrayList<Application> getScholarshipApplicationsAboveScore(int ScholarshipID, int minScore) {

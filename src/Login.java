@@ -12,7 +12,7 @@ public class Login {
             boolean exit = false;
             boolean isAdmin = false;
             int action;
-            char actionName;
+            char actionName = 'o';
             boolean validInput;
             boolean internalExit = false;
 
@@ -23,14 +23,24 @@ public class Login {
 
                 while (!validInput) {
                     System.out.println("Would you like to exit?\n(y/n): ");
-                    actionName = scnr.next().charAt(0);
-                    scnr.nextLine();
-                    if (actionName == 'n') {
-                        validInput = true;
-                    } else if (actionName == 'y') {
-                        validInput = true;
-                        exit = true;
+                    try {
+                        actionName = scnr.next().charAt(0);
+                        scnr.nextLine();
+                        if ((actionName != 'y') && (actionName != 'n')) {
+                            System.out.println("Invalid action");
+                        }
+                        else {
+                            validInput = true;
+                        }
                     }
+                    catch (Exception e) {
+                        scnr.nextLine();
+                        System.out.println("Invalid action");
+                    }
+                }
+
+                if (actionName == 'y') {
+                    exit = true;
                 }
 
                 while ((!loggedIn) && (!exit)) {
@@ -66,10 +76,15 @@ public class Login {
                         break;
                     }
 
-                    System.out.println("Type the number to the left of desired action. \nAction: ");
-
-                    action = scnr.nextInt();
+                    System.out.print("Type the number to the left of desired action. \nAction: ");
+                    try {
+                        action = scnr.nextInt();
+                    }
+                    catch (Exception e) {
+                        action = -1;
+                    }
                     scnr.nextLine();
+
                     if (action == 1) {
                         loggedIn = false;
                     }
@@ -83,19 +98,30 @@ public class Login {
                             
                             System.out.print("View: ");
                             Scholarship currScholarship;
-                            action = scnr.nextInt();
+                            try {
+                                action = scnr.nextInt();
+                            }
+                            catch (Exception e) {
+                                action = -1;
+                            }
                             scnr.nextLine();
                             if ((action > 0) && (action <= currUser.getScholarshipIDs().size())) {
                                 currScholarship = manager.getScholarshipInfo(currUser.getScholarshipIDs().get(action - 1));
+                                System.out.println(manager.scholarshipToString(currScholarship.getID()));
                                 
                                 action = 0;
                                 internalExit = false;
                                 while(!internalExit) {
-                                    System.out.println(manager.scholarshipToString(currScholarship.getID()));
                                     
-                                    System.out.println("Would you like to...\n 1) review applications\n 2) Exit \n Type the number to the left of desired action. \n Action: ");
 
-                                    action = scnr.nextInt();
+                                    System.out.print("Would you like to...\n 1) review applications\n 2) Exit \n Type the number to the left of desired action. \n Action: ");
+
+                                    try {
+                                        action = scnr.nextInt();
+                                    }
+                                    catch (Exception e) {
+                                        action = -1;
+                                    }
                                     scnr.nextLine();
                                     if (action == 1) {
                                         System.out.println("Would you like to...\n 1) view matched applicants \n 2) view all applicants\nType the number to the right of desired action.");
@@ -103,7 +129,12 @@ public class Login {
                                         while(!internalExit) {
                                             ArrayList<Application> applications;
                                             System.out.print("Action: ");
-                                            action = scnr.nextInt();
+                                            try {
+                                                action = scnr.nextInt();
+                                            }
+                                            catch (Exception e) {
+                                                action = -1;
+                                            }
                                             scnr.nextLine();
                                             if ((action == 1) || (action == 2)) {
                                                 if (action == 1) {
@@ -131,15 +162,27 @@ public class Login {
 
                                                         while(!internalExit) {
                                                             System.out.print("Action: ");
-                                                            int action1 = scnr.nextInt();
-                                                            scnr.nextLine();
+                                                            int action1;
+                                                            try {
+                                                                action1 = scnr.nextInt();
+                                                                scnr.nextLine();
+                                                            }
+                                                            catch (Exception e) {
+                                                                action1 = -1;
+                                                            }
                                                             if (action1 == 1) {
                                                                 System.out.println("Input application priority score.");
 
                                                                 while(!internalExit) {
                                                                     System.out.print("Score: ");
-                                                                    int input = scnr.nextInt();
-                                                                    scnr.nextLine();
+                                                                    int input;
+                                                                    try {
+                                                                        input = scnr.nextInt();
+                                                                        scnr.nextLine();
+                                                                    }
+                                                                    catch (Exception e) {
+                                                                        input = -1;
+                                                                    }
                                                                     if (input >= 0) {
                                                                         applications.get(action - 1).setScore(input);
                                                                         System.out.println("Application " + String.format("%06x", applications.get(action - 1).getID()) + " priority score set to " + applications.get(action - 1).getScore() + ".");
@@ -155,8 +198,13 @@ public class Login {
                                                                 System.out.println("Would you like to set " + String.format("%06x", applications.get(action - 1).getID()) + " status to (1) denied, (2) reviewed, or (3) approved?");
                                                                 while (!validInput) {
                                                                     System.out.print("New Status: ");
-                                                                    action1 = scnr.nextInt();
-                                                                    scnr.nextLine();
+                                                                    try {
+                                                                        action1 = scnr.nextInt();
+                                                                        scnr.nextLine();
+                                                                    }
+                                                                    catch (Exception e) {
+                                                                        action1 = -1;
+                                                                    }
                                                                     if (action1 == 1) {
                                                                         validInput = true;
                                                                         applications.get(action - 1).setScore(0);
@@ -203,6 +251,8 @@ public class Login {
                                                 System.out.println("Invalid action");
                                             }
                                         }
+                                        internalExit = false;
+                                        System.out.println(manager.scholarshipToString(currScholarship.getID()));
                                     }
                                     else if (action == 2) {
                                         internalExit = true;
@@ -226,11 +276,14 @@ public class Login {
                         }
 
                         internalExit = false;
-                        System.out.println("Type the number next to the application to review or 0 to return to the scholarship information page.");
-                        
                         while(!internalExit) {
-                            System.out.println("Application #: ");
-                            action = scnr.nextInt();
+                            System.out.print("Type the number next to the application to review or 0 to return to the scholarship information page.\nApplication #: ");
+                            try {
+                                action = scnr.nextInt();
+                            }
+                            catch (Exception e) {
+                                action = -1;
+                            }
                             scnr.nextLine();
                             if ((action > 0) && (action <= applications.size())) {
                                 System.out.println(manager.applicationToString(applications.get(action - 1).getID()));
@@ -249,10 +302,11 @@ public class Login {
                                             validInput = true;
                                             exit = true;
                                         }
+                                        else {
+                                            System.out.println("Invalid action");
+                                        }
                                     }
                                 }
-
-                                System.out.println("Type the number next to the application to review or 0 to return to the scholarship information page.");
                             }
                             else if (action == 0) {
                                 internalExit = true;

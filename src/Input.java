@@ -148,7 +148,7 @@ public class Input {
                         scholarshipID = Integer.parseInt(arr[i]);
                     break;
                     case 3:
-                        letter =arr[i];
+                        letter = arr[i];
                     break;
                     default:
                         break;
