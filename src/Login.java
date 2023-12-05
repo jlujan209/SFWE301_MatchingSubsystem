@@ -5,7 +5,6 @@ public class Login {
     public static void main(String[] args) {
         ScholarshipApplicationManager manager = new ScholarshipApplicationManager();
         manager.initializeWithCSVs("Scholarships.csv", "Applicants.csv", "Applications.csv");
-        manager.toReports();
 
         try (Scanner scnr = new Scanner(System.in)) {
 
@@ -52,6 +51,7 @@ public class Login {
                     if ((currUser.getScholarshipIDs() != null) && !(currUser.getScholarshipIDs().isEmpty())) {
                         System.out.println("Would you like to...\n 1) logout");
                         System.out.println(" 2) review scholarship info");
+                        System.out.println(" 3) generate report");
                         isAdmin = true;
                     }
                     else if (!currUser.getApplicationIDs().isEmpty()) {
@@ -221,7 +221,7 @@ public class Login {
                         ArrayList<Application> applications = new ArrayList<Application>();
                         for (int i = 0; i < currUser.getApplicationIDs().size(); ++i) {
                             applications.add(manager.getApplicationInfo(currUser.getApplicationIDs().get(i)));
-                            System.out.println((i + 1) + ") Application ID: " + applications.get(i).getID());
+                            System.out.println((i + 1) + ") Application ID: " + String.format("%06x", applications.get(i).getID()));
                             System.out.println("Score: " + applications.get(i).getScore() + "\n");
                         }
 
@@ -263,7 +263,11 @@ public class Login {
                         }
                         internalExit = true;
                     }
-                    else if ((action == 3) && (!isAdmin)) {
+                    else if ((action == 3) && isAdmin) {
+                        manager.toReports();
+                        System.out.println("Report Generated.");
+                    }
+                    else if (action == 3) {
                         internalExit = false;
                         ArrayList<Scholarship> scholarships = new ArrayList<Scholarship>();
 
