@@ -5,6 +5,7 @@ public class Login {
     public static void main(String[] args) {
         ScholarshipApplicationManager manager = new ScholarshipApplicationManager();
         manager.initializeWithCSVs("Scholarships.csv", "Applicants.csv", "Applications.csv");
+        manager.toReports();
 
         try (Scanner scnr = new Scanner(System.in)) {
 
