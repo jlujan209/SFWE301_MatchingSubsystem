@@ -362,6 +362,7 @@ public class Login {
                                     scnr.nextLine();
                                     if ((input > 0.0) && (input <= 4.0)) {
                                         gpa = input;
+                                        internalExit = true;
                                     }
                                     else {
                                         System.out.println("Invalid input");
@@ -377,6 +378,7 @@ public class Login {
                                     scnr.nextLine();
                                     if ((input.length() > 0) && (input.length() <= 4)) {
                                         major = input;
+                                        internalExit = true;
                                     }
                                     else {
                                         System.out.println("Invalid input");
@@ -392,6 +394,7 @@ public class Login {
                                     scnr.nextLine();
                                     if (input > 0.0) {
                                         awardAmount = input;
+                                        internalExit = true;
                                     }
                                     else {
                                         System.out.println("Invalid input");
